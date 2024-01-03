@@ -4,14 +4,13 @@
 ## Table of Contents
 
 - [Project Scope](#project-scope)
-  - [Features](#features)
-    - [Algorithm Visualization](#algorithm-visualization)
-    - [Manim Library Integration](#manim-library-integration)
-    - [Potential CLI Integration](#potential-cli-integration)
-    - [Educational Purpose](#educational-purpose)
+- [Features](#features)
+  - [Algorithm Visualization](#algorithm-visualization)
+  - [Manim Library Integration](#manim-library-integration)
+  - [Potential CLI Integration](#potential-cli-integration)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
+  - [Installation](#install-dependencies)
   - [Usage](#usage)
 - [Future Enhancements](#future-enhancements)
 
