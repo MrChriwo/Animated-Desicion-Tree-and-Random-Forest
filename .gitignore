@@ -1,0 +1,5 @@
+*.mp4
+__pycache__
+anim/media
+anim/__pycache__
+config/__pycache__
