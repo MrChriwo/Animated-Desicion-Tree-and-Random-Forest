@@ -1,13 +1,10 @@
-from typing import Any
 from manim import *
 from retrieve import get_config
 
-class Intro(Scene):
-
+class Scene2(Scene):
     def __init__(self, **kwargs):
         self.init_config()
         super().__init__(**kwargs)
-
 
     def init_config (self) -> None:
         try: 
@@ -17,21 +14,19 @@ class Intro(Scene):
         except Exception as e:
             print(e)
 
-
-    def generate_titles(self):
-        header = Text(self.title, font="Montserrat", color=WHITE).scale(1.5)
-        header.to_edge(UP)
+    def construct(self):
+        title = Text(self.title, font="Montserrat", color=WHITE).scale(1.5)
+        title.to_edge(UP)
         separator = Line(LEFT, RIGHT, color=WHITE).scale(2)
-        separator.next_to(header, DOWN)
+        separator.next_to(title, DOWN)
         subtitle = Text(self.subtitle, font="Montserrat", color=WHITE).scale(1.2)
         subtitle.next_to(separator, DOWN)
 
-        self.play(Write(header))
-        self.wait(0.5)
+        group = Group(title, separator, subtitle)
+        group.center()
+
+        self.play(Write(title))
+        self.wait(0.3)
         self.play(Write(separator))
+        self.wait(0.3)
         self.play(Write(subtitle))
-        self.wait(1)
-
-    def construct(self):
-        self.generate_titles()
-
