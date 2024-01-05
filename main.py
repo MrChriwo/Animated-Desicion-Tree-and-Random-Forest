@@ -43,6 +43,7 @@ def handle_outro_input() -> None:
 
 
 if __name__ == "__main__":
+    methods.check_media_folder()
     methods.display_home()
     handle_intro_input()
     handle_outro_input()

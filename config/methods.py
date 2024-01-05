@@ -1,6 +1,7 @@
 import os 
 import json
 import subprocess
+import shutil
 
 # retrieve the ascii art / logo
 
@@ -98,10 +99,6 @@ def create_video(quality: str) -> None:
         print("Invalid quality flag. Using default quality flag.")
         quality_flag = "-ql"
     try:
-        # if anim/media/videos exists, delete it
-        if os.path.exists(os.path.join(os.path.dirname(__file__), "..", "anim", "media", "videos")):
-            os.rmdir(os.path.join(os.path.dirname(__file__), "..", "anim", "media"))
-
         # get all pyscripts from the anim folder
         files = os.listdir(os.path.join(os.path.dirname(__file__), "..", "anim"))
         files = [file for file in files if file.endswith(".py") and file != "retrieve.py"]
@@ -142,6 +139,11 @@ def play_video() -> None:
         subprocess.run(["ffplay", "-x", str(video_width), "-y", str(video_height), "output.mp4"], cwd=os.path.join(os.path.dirname(__file__), "..", "anim"))
     except Exception as e:
         print(f"An error occurred: {e}")
+
+
+def check_media_folder() -> None:
+        if os.path.exists(os.path.join(os.path.dirname(__file__), "..", "anim", "media")):
+            shutil.rmtree(os.path.join(os.path.dirname(__file__), "..", "anim", "media"))
 
 def build_video(quality: str) -> None:
     try:
