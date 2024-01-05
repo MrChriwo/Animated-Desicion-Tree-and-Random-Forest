@@ -28,6 +28,20 @@ def handle_intro_input() -> None:
 if __name__ == "__main__":
     methods.display_home()
     handle_intro_input()
+    quals = ["low", "medium", "high", "ultra"]
+    while True:
+        quality = input("Enter quality: (low | medium | high | ultra): ")
+        if quality in quals:
+            break
+        else:
+            print("Invalid input.")
+    
+    input("Press enter to start building video...")
+    
+    methods.build_video(quality=quality)
+    methods.play_video()
+    print("\n\nProject created. video available at anim/output.mp4")
+
     print("Done!")
 
 
