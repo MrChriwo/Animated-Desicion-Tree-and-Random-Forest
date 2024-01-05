@@ -77,6 +77,9 @@ def get_all_videos():
                 file = os.path.join(root, file).split("anim")[1]
                 if "partial_movie_files" not in file:
                     mp4_files.append(file)
+
+    # sort mp4_files by name
+    mp4_files.sort()
     return mp4_files
 
 
@@ -95,9 +98,13 @@ def create_video(quality: str) -> None:
         print("Invalid quality flag. Using default quality flag.")
         quality_flag = "-ql"
     try:
+        # if anim/media/videos exists, delete it
+        if os.path.exists(os.path.join(os.path.dirname(__file__), "..", "anim", "media", "videos")):
+            os.rmdir(os.path.join(os.path.dirname(__file__), "..", "anim", "media"))
+
         # get all pyscripts from the anim folder
         files = os.listdir(os.path.join(os.path.dirname(__file__), "..", "anim"))
-        files = [file for file in files if file.endswith(".py")]
+        files = [file for file in files if file.endswith(".py") and file != "retrieve.py"]
         
         # compile all the files
         for file in files:

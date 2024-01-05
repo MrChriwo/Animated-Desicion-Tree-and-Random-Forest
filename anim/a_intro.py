@@ -1,8 +1,5 @@
 from typing import Any
 from manim import *
-import json
-import os
-
 from retrieve import get_config
 
 class Intro(Scene):
@@ -38,18 +35,3 @@ class Intro(Scene):
     def construct(self):
         self.generate_titles()
 
-
-
-
-def fade_out(scene: Scene):
-    animations = []
-    for mobject in scene.mobjects:
-        animations.append(FadeOut(mobject))
-    scene.play(*animations)
-
-
-
-class Outro(Scene):
-    def construct(self):
-        text = Text("Thanks for watching!", font="Montserrat", color=WHITE).scale(1.5)
-        self.play(Write(text))
