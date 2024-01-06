@@ -1,6 +1,6 @@
 from typing import Any
 from manim import *
-from retrieve import get_config, split_gif
+from retrieve import split_gif
 import os
 
 class ForestScene(Scene):
@@ -10,7 +10,7 @@ class ForestScene(Scene):
         super().__init__(**kwargs)
 
     def create_background(self): 
-        # list images in frames folder
+        # using iterator to iterate over frames of asset gif
         gif = os.path.join(self.asset_path, "forest_generating.gif")
         frame_iterator = split_gif(gif)
 
