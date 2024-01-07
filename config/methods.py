@@ -1,6 +1,7 @@
 import os 
 import json
 import subprocess
+import shutil
 
 # retrieve the ascii art / logo
 
@@ -25,21 +26,6 @@ def get_version() -> str:
         with open(file, "r") as file:
             version = file.read()
             return version
-    except FileNotFoundError:
-        print(f"File not found: {file}")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-
-
-
-# retrieve the config file
-def get_config() -> dict:
-    try:
-        file = os.path.join(os.path.dirname(__file__), 'config.json')
-
-        with open(file, "r") as f:
-            config = json.load(f)
-            return config
     except FileNotFoundError:
         print(f"File not found: {file}")
     except Exception as e:
@@ -92,19 +78,34 @@ def get_all_videos():
                 file = os.path.join(root, file).split("anim")[1]
                 if "partial_movie_files" not in file:
                     mp4_files.append(file)
+
+    # sort mp4_files by name
+    mp4_files.sort()
     return mp4_files
 
 
 
-def create_video() -> None:
+def create_video(quality: str) -> None:
+    quality_flag = ""
+    if quality == "low":
+        quality_flag = "-ql"
+    elif quality == "medium":
+        quality_flag = "-qm"
+    elif quality == "high":
+        quality_flag = "-qh"
+    elif quality == "ultra":
+        quality_flag = "-qk"
+    else: 
+        print("Invalid quality flag. Using default quality flag.")
+        quality_flag = "-ql"
     try:
         # get all pyscripts from the anim folder
         files = os.listdir(os.path.join(os.path.dirname(__file__), "..", "anim"))
-        files = [file for file in files if file.endswith(".py")]
+        files = [file for file in files if file.endswith(".py") and file != "retrieve.py"]
         
         # compile all the files
         for file in files:
-            subprocess.run(["manim", "-ql", file, "-a"], cwd=os.path.join(os.path.dirname(__file__), "..", "anim"))
+            subprocess.run(["manim", quality_flag, file, "-a"], cwd=os.path.join(os.path.dirname(__file__), "..", "anim"))
 
     except Exception as e:
         print(f"An error occurred: {e}")
@@ -120,8 +121,33 @@ def concat_videos () -> None:
             for file in files:
                 f.write(f"file '{file}'\n")
         # run the ffmpeg command
+                
+        # if anim/output.mp4 exists, delete it
+        if os.path.exists(os.path.join(anim_folder, "output.mp4")):
+            os.remove(os.path.join(anim_folder, "output.mp4"))
+
         subprocess.run(["ffmpeg", "-f", "concat", "-safe", "0", "-i", tmp_compile_file, "-c", "copy", "output.mp4"], cwd=os.path.join(os.path.dirname(__file__), "..", "anim"))
         os.remove(tmp_compile_file)
     except Exception as e:
         print(f"An error occurred: {e}") 
 
+
+def play_video() -> None:
+    video_height = 800
+    video_width = 1200
+    try:
+        subprocess.run(["ffplay", "-x", str(video_width), "-y", str(video_height), "output.mp4"], cwd=os.path.join(os.path.dirname(__file__), "..", "anim"))
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
+def check_media_folder() -> None:
+        if os.path.exists(os.path.join(os.path.dirname(__file__), "..", "anim", "media")):
+            shutil.rmtree(os.path.join(os.path.dirname(__file__), "..", "anim", "media"))
+
+def build_video(quality: str) -> None:
+    try:
+        create_video(quality=quality)
+        concat_videos()
+    except Exception as e:
+        print(f"An error occurred: {e}")

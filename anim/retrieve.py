@@ -1,5 +1,7 @@
 import json
 import os
+import imageio
+from PIL import Image
 
 # retrieve the config file
 def get_config() -> dict:
@@ -13,3 +15,14 @@ def get_config() -> dict:
         print(f"File not found: {file}")
     except Exception as e:
         print(f"An error occurred: {e}")
+
+
+
+def split_gif(gif_path):
+
+    images = imageio.get_reader(gif_path)
+    for i, frame in enumerate(images):
+
+        frame = Image.fromarray(frame)
+        resized_frame = frame.resize((1920, 1080), Image.ANTIALIAS)
+        yield resized_frame
