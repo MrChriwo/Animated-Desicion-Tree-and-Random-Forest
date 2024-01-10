@@ -104,14 +104,13 @@ class b_explain_vocabs(Scene):
 
         g = Graph(["ROOT"], [], vertex_config=self.VERTEX_CONF)
         g = self.expand_vertex(g, "ROOT",1)
-        self.add(g)
         title.to_edge(UP)
         self.play(Write(title))
 
         split_text.next_to(g, UP, buff=0.5)
         split_text.shift(LEFT*1.2)
-
-
+        self.add(g)
+        
         self.play(
             g.animate.change_layout(
                 "tree",
