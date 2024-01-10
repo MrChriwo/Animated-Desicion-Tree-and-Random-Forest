@@ -132,6 +132,16 @@ def concat_videos () -> None:
         print(f"An error occurred: {e}") 
 
 
+
+def add_audio() -> None:
+    try:    
+    # run ffmpeg -i video.mkv -i audio.mp3 -map 0 -map 1:a -c:v copy -shortest output.mkv
+        subprocess.run(["ffmpeg", "-i", "output.mp4", "-i", "background_track.mp3", "-map", "0", "-map", "1:a", "-c:v", "copy", "-shortest", "output2.mp4"], cwd=os.path.join(os.path.dirname(__file__), "..", "anim"))
+
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 def play_video() -> None:
     video_height = 800
     video_width = 1200
@@ -149,5 +159,6 @@ def build_video(quality: str) -> None:
     try:
         create_video(quality=quality)
         concat_videos()
+        add_audio()
     except Exception as e:
         print(f"An error occurred: {e}")

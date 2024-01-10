@@ -17,6 +17,7 @@ class Scene2(Scene):
     def construct(self):
         title = Text(self.title, font="Montserrat", color=WHITE).scale(1.5)
         title.to_edge(UP)
+        title.set_color_by_gradient(BLUE, GREEN, RED)
         separator = Line(LEFT, RIGHT, color=WHITE).scale(2)
         separator.next_to(title, DOWN)
         subtitle = Text(self.subtitle, font="Montserrat", color=WHITE).scale(1.2)
