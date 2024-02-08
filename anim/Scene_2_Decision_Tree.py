@@ -1,5 +1,6 @@
 from manim import *
 import networkx as nx
+import numpy as np
 
 class a_decision_tree_intro(Scene):
 
@@ -104,6 +105,7 @@ class b_explain_vocabs(Scene):
 
         g = Graph(["ROOT"], [], vertex_config=self.VERTEX_CONF)
         g = self.expand_vertex(g, "ROOT",1)
+        
         title.to_edge(UP)
         self.play(Write(title))
 
@@ -215,3 +217,190 @@ class b_explain_vocabs(Scene):
         self.play(FadeOut(*self.mobjects))
         self.wait(0.3)
 
+
+class c(Scene):
+    
+        def create_tree(self): 
+            G = nx.Graph()
+
+            G.add_node("ROOT")
+
+            for i in range(5):
+                G.add_node("Child_%i" % i)
+                G.add_node("Grandchild_%i" % i)
+
+                G.add_edge("ROOT", "Child_%i" % i)
+                G.add_edge("Child_%i" % i, "Grandchild_%i" % i)
+
+                # all nodes black
+                G.nodes["Child_%i" % i]["color"] = "black"
+
+
+            return (Graph(list(G.nodes), list(G.edges), layout="tree", root_vertex="ROOT").set_color_by_gradient(BLUE, GREEN, RED))
+        
+        def construct(self):
+            title = (Text("Decision Trees", font="Montserrat", color=WHITE).scale(1.5))
+            title.to_edge(UP)
+            title.set_color_by_gradient(BLUE, GREEN, RED)
+            self.play(Write(title))
+            tree_classifier = self.create_tree()
+            tree_regressor = self.create_tree()
+            tree_classifier.scale(0.3)
+            tree_regressor.scale(0.3)
+            tree_classifier.next_to(LEFT*4.5, buff=0.5)
+            tree_regressor.next_to(RIGHT*2, buff=0.5)
+
+            title_classifier = Text("Classification Tree", font="Montserrat", color=WHITE).scale(0.7)
+            title_regressor = Text("Regression Tree", font="Montserrat", color=WHITE).scale(0.7)
+            title_classifier.next_to(tree_classifier, DOWN, buff=0.3)
+            title_regressor.next_to(tree_regressor, DOWN, buff=0.3)
+
+            self.play(Create(tree_classifier))
+            self.wait(1)
+            self.play(Write(title_classifier))
+            self.wait(1)
+
+            self.play(Create(tree_regressor))
+            self.wait
+            self.play(Write(title_regressor))
+            self.wait(1)
+
+            # self.play(title_classifier.scale, 1.5, title_classifier.shift, UP*0.8)
+            title_classifier.animate.shift( RIGHT*0.8)
+
+            explain_classifier = Text("Used for classification tasks", font="Montserrat", color=WHITE).scale(0.4)
+            explain_classifier.next_to(title_classifier, DOWN, buff=0.3)
+            self.play(Write(explain_classifier))
+
+            explain_classifier_2 = Text("Predicts a class", font="Montserrat", color=WHITE).scale(0.4)
+            self.wait(1)
+            explain_classifier_2.next_to(explain_classifier, DOWN, buff=0.3)
+            self.wait(1)
+            self.play(Write(explain_classifier_2))
+
+            explain_regressor = Text("Used for regression tasks", font="Montserrat", color=WHITE).scale(0.4)
+            explain_regressor.next_to(title_regressor, DOWN, buff=0.3)
+            explain_regressor_2 = Text("Predicts a numeric value", font="Montserrat", color=WHITE).scale(0.4)
+            explain_regressor_2.next_to(explain_regressor, DOWN, buff=0.3)
+            self.wait(1)
+            self.play(Write(explain_regressor))
+            self.wait(1)
+            self.play(Write(explain_regressor_2))
+            self.wait(2)
+
+            self.play(FadeOut(*self.mobjects))
+            self.wait(0.3)
+
+
+
+class d(Scene):
+    # scene that renders a tree
+    # node has text "it is an apple"
+    # then the decision notes are added
+
+    def create_random_row(self):
+        num = 0
+        while True:
+            # random values for the columns
+            random_row = [
+                np.random.choice(["rot", "orange"]),
+                np.random.randint(100, 200),
+                np.random.randint(5, 10),
+                np.random.choice(["apfel", "orange"]),
+            ]
+
+            if "apfel" in random_row and "orange" in random_row and ["orange", "rot"] in random_row or num > 10:
+                return [str(x) for x in random_row]
+            else: 
+                num += 1
+
+
+    def construct(self):
+        title = (Text("Classification Trees", font="Montserrat", color=WHITE).scale(1.5))
+        title.to_edge(UP)
+        title.set_color_by_gradient(BLUE, GREEN, RED)
+        self.play(Write(title))
+        self.wait(1)
+
+        # draw a table with the text "It is an apple"
+        # columns are "Farbe", "Gewicht", "Größe", "Obst"
+        # random values for the columns
+
+        num_rows = 5
+
+        table = Table(
+            [["Farbe", "Gewicht", "Größe", "Obst"]] +
+            [self.create_random_row() for _ in range(num_rows)],
+            h_buff=1,
+            v_buff=0.5,
+            line_config={"color": WHITE},
+            fill_color=BLUE,
+            fill_opacity=1,
+        )
+
+        rows = ["Farbe", "Gewicht", "Größe", "Obst"]
+
+        table.scale(0.7)
+        table.next_to(title, DOWN, buff=0.5)
+        self.play(Create(table))
+        self.wait(1.5)
+
+        # scale the table down and move it to the left
+        self.play(table.animate.scale(0.7))
+        self.play(table.animate.shift(LEFT*3))
+        self.wait(1)
+
+        table[0][0].set_color(GREEN)
+        self.wait(2)
+
+        # create a tree graph with root "Farbe" and a split for "rot" and "grün"
+        # Create a tree graph with root "Farbe" and a split for "rot" and "grün"
+        g = Graph(["Farbe", "rot", "orange", "Apfel", "Orange"], 
+                [("Farbe", "rot"), ("Farbe", "orange"), ("rot", "Apfel"), ("orange", "Orange")], 
+                root_vertex="Farbe", layout="tree", labels=True)
+        g.scale(0.5)
+        g.next_to(table, RIGHT, buff=1.2)
+        self.play(Create(g))
+        self.wait(1)
+
+
+
+  
+
+
+
+
+        
+
+class e(Scene):
+    # scene to explain gini impurity
+    def construct(self):
+        title = (Text("Gini Impurity", font="Montserrat", color=WHITE).scale(1.5))
+        title.to_edge(UP)
+        title.set_color_by_gradient(BLUE, GREEN, RED)
+        self.play(Write(title))
+        self.wait(1)
+
+        # draw a rectangle
+        rect = Rectangle(height=2, width=7, color=WHITE)
+        rect.set_color_by_gradient(BLUE, GREEN, RED)
+        rect.next_to(title, DOWN, buff=1.2)
+        self.play(Create(rect))
+        self.wait(1)
+
+        # wirte gini formula in the rectangle
+        gini_formula = MathTex("Gini", "(", "t", ")", "=", "1", "-", "(", "p", "_", "0", "^2", "+", "p", "_", "1", "^2", ")")
+        gini_formula.scale(1.3)
+        gini_formula.next_to(title, DOWN, buff=1.9)
+        self.play(Write(gini_formula))
+        self.wait(1)
+
+        gini_grp = VGroup(gini_formula, rect)
+
+        # scale the group down and move it to the left
+        self.play(gini_grp.animate.scale(0.7))  
+        self.play(gini_grp.animate.shift(LEFT*3))
+       
+        self.wait(1)
+
+ 
