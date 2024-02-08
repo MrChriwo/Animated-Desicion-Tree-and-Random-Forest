@@ -2,13 +2,6 @@ from manim import *
 
 class Intro(Scene):
     def construct(self):
-        # Hintergrundbild laden und einblenden
-        background_image = ImageMobject("../assets/Boosting/background.jpg")
-        background_image.scale_to_fit_height(config.frame_height)
-        background_image.scale_to_fit_width(config.frame_width)
-        self.play(FadeIn(background_image))
-        self.wait(2)  
-
         # Haupttitel erstellen, etwas kleiner und unterstrichen
         title = Text("Boosting in Entscheidungsbäumen", font_size=68, color=BLUE, weight=BOLD).set_stroke(BLACK, width=0.5)
         title.underline = True  # Unterstreichung hinzufügen
@@ -30,19 +23,12 @@ class Intro(Scene):
         self.play(GrowArrow(arrow), FadeIn(sub_text))
         self.wait(2)  # Verlängerte Wartezeit für die Gesamtlänge
 
-        # Ausrichtung überprüfen, um sicherzustellen, dass Haupttitel und Untertitel zusammen mittig sind
-        group = VGroup(title, sub_text, arrow)
-        group.move_to(ORIGIN)
-
-        # Ausblendung aller Elemente am Ende
-        self.play(FadeOut(group), FadeOut(background_image))
-        self.wait(2)  # Abschlusswartezeit
+        # Verblassen aller Elemente
+        self.play(*[FadeOut(mob) for mob in self.mobjects])
 
 class AdaBoost(Scene):
 
     def construct(self):
-        self.camera.background_color = "#add8e6"
-        
         # Initialisiere title_text als Instanzvariable
         self.title_text = Text("Adaptive Boosting", font_size=48).move_to(ORIGIN)
         
@@ -57,15 +43,15 @@ class AdaBoost(Scene):
         
         # Bewege "AdaBoost" an den oberen Bildschirmrand
         self.play(self.title_text.animate.to_edge(UP), run_time=3)
-        self.wait(4)
+        self.wait(1)
         
         # Erstellung des Entscheidungsbaums
         self.create_decision_tree(self.title_text.get_bottom() + DOWN * 0.5)
-        self.wait(4)  
+        self.wait(1)  
         
         # Zeichnen des inkorrekten Zeichens
         self.draw_incorrect_sign()
-        self.wait(4)
+        self.wait(1)
         
         # Löschen des Baumes und des X-Zeichens
         self.clear_tree_and_sign()
@@ -78,13 +64,13 @@ class AdaBoost(Scene):
         self.draw_correct_sign()
         self.wait(4)
 
-        # Alles außer der Überschrift und dem Hintergrund ausblenden
-        self.remove_all_except_title_and_background()
+        # Alles außer der Überschrift ausblenden
+        self.remove_all_except_title()
 
         # Füge die neue Sequenz hier hinzu
         self.construct_data_flow_sequence()
         
-        # Alles außer der Hintergrundfarbe und Überschrift ausblenden
+        # Alles außer der Überschrift ausblenden
         self.play(*[FadeOut(obj) for obj in self.mobjects if obj != self.title_text], run_time=3)
         self.wait(3)
 
@@ -200,9 +186,9 @@ class AdaBoost(Scene):
 
         self.play(Create(check_line1), Create(check_line2), run_time=2)
 
-    def remove_all_except_title_and_background(self):
-        # Alle Objekte außer der Überschrift und dem Hintergrund ausblenden
-        self.play(*[FadeOut(obj) for obj in self.mobjects if obj not in [self.camera.background_color, self.title_text]], run_time=3)
+    def remove_all_except_title(self):
+        # Alle Objekte außer der Überschrift ausblenden
+        self.play(*[FadeOut(obj) for obj in self.mobjects if obj != self.title_text], run_time=3)
 
     def construct_data_flow_sequence(self):
         # Schriftzug "Training Data" oben links erstellen
@@ -215,7 +201,7 @@ class AdaBoost(Scene):
         self.play(GrowArrow(arrow_to_first_tree), run_time=2)
 
         # Jetzt den restlichen Teil der Sequenz abspielen
-        tree_positions = [first_tree_position, UP * 0.5, UP * 0.5 + RIGHT * 5]
+        tree_positions = [first_tree_position, UP * 0.5 + RIGHT * 5]
        
         # Erhöhe den Abstand zwischen den Bäumen, um Überschneidungen zu vermeiden
         tree_positions = [UP * 0.5 + LEFT * 5, UP * 0.5, UP * 0.5 + RIGHT * 5]
@@ -250,7 +236,7 @@ class AdaBoost(Scene):
 
 class GradientBoosting(Scene):
     def construct(self):
-        self.camera.background_color = "#add8e6"
+        self.camera.background_color = "#00000000"  # Transparenter Hintergrund
 
         # Initialize title_text as an instance variable
         self.title_text = Text("Gradient Boosting", font_size=48)
