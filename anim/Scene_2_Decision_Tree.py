@@ -547,26 +547,29 @@ class e(Scene):
             tree.vertices["ROOT/0/1"].animate.set_color(WHITE),
             tree.vertices["ROOT/0/1/0"].animate.set_color(WHITE),
         )
-
         self.wait(2)
 
-        self.play( tree.verticies["ROOT"].animate.set_color(RED))
+        self.play( 
+            tree.vertices["ROOT"].animate.set_color(RED))
         self.wait(1)
-        self.play(tree.verticies["ROOT/1"].animate.set_color(GREEN))
+        self.play(tree.vertices["ROOT/1"].animate.set_color(GREEN))
         self.wait(1)
-        self.play( tree.verticies["ROOT/1/0"].animate.set_color(GREEN))
+        self.play(tree.vertices["ROOT/1/0"].animate.set_color(GREEN))
         self.wait(1)
-        self.play(tree.verticies["ROOT/1/0/1"].animate.set_color(GREEN))
-
-        self.wait(2)
-
-        # clean up
+        self.play(tree.vertices["ROOT/1/0/0"].animate.set_color(GREEN))
+        
         self.play(
             tree.vertices["ROOT"].animate.set_color(WHITE),
             tree.vertices["ROOT/1"].animate.set_color(WHITE),
             tree.vertices["ROOT/1/0"].animate.set_color(WHITE),
-            tree.vertices["ROOT/1/0/1"].animate.set_color(WHITE),
-
+            tree.vertices["ROOT/1/0/0"].animate.set_color(WHITE),
         )
+
+        self.play(tree.vertices["ROOT/1"].animate.set_color(GREEN))
+        self.wait(1)
+        self.play(tree.vertices["ROOT/1/1"].animate.set_color(GREEN))
+        self.wait(1)
+        self.play(tree.vertices["ROOT/1/1/1"].animate.set_color(GREEN))
+        self.wait(3)
 
         self.play(FadeOut(*self.mobjects))
